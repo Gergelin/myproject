@@ -31,7 +31,7 @@ function _ragVal_vel(word){
 
     rag = ragFirstLetter+rag;
 
-    generated_word = word+rag;
+    generated_word = word+'-'+rag;
 
     return generated_word;
 }
@@ -67,6 +67,9 @@ function _getLastLetter(word){
             result = word.slice(-2);
         }
         if(lastLetter1 === lastLetter2 && !_isMaganHangzo(lastLetter3)){ //vizsgálni hogy 2 jegyű mássalhangzóról van e szó
+            result = '';
+        }
+        if(lastLetter2 === lastLetter3){ //vizsgálni hogy 2 ugyanolyan mássalhangzóra végződik-e mert tripla nem lehet
             result = '';
         }
     return result;
@@ -117,6 +120,10 @@ function _ragEtelTipus(){
 
 }
 
+function _getFoodType(word){
+    return word+' '+eloEtelTipusok[0];
+}
+
 function _getInputs(){
 
 }
@@ -155,6 +162,28 @@ function _getNamePattern(Words){
 
 }
 
+//alma leves
+//alma leves répával
+//répás alma leves
+//Budapesti répás almaleves 
+//Budapesti répás almaleves Vidéki módra
+
+var test_sentence = [{word: 'alma', rag: _getFoodType},{word: 'répa', rag: _ragVal_vel}];
+
+function processPattern(obj){
+    obj.word = obj.rag(obj.word);
+}
+
+function generateSentence(test_sentence){
+    var s = '';
+    for(i in test_sentence){
+        processPattern(test_sentence[i]);
+        s += test_sentence[i].word;
+    }
+    return s;
+
+}
+
 function doGenerate(){
     var word = document.getElementById('word').value;
     var result_div = document.getElementById('result');
@@ -162,9 +191,12 @@ function doGenerate(){
     var test = [word];
     var test2 = [word, 'répa'];
 
+    //processPattern(tst);
+       var sen =  generateSentence(test_sentence);
+       generated_word = sen;
 
-    var generated_word = _getNamePattern(test);
-//    var generated_word = _ragVal_vel(word);
+//    var generated_word = _getNamePattern(test);
+    //var generated_word = _ragVal_vel(word);
 //    console.log(word);
     result_div.innerHTML = generated_word;
 }
